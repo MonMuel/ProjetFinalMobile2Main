@@ -1,0 +1,52 @@
+{
+  "e1": [
+    { "latitude": 45.5185, "longitude": -73.5695 },
+    { "latitude": 45.5202, "longitude": -73.5668 },
+    { "latitude": 45.5218, "longitude": -73.5639 },
+    { "latitude": 45.5231, "longitude": -73.5605 },
+    { "latitude": 45.5243, "longitude": -73.5571 },
+    { "latitude": 45.5257, "longitude": -73.5539 },
+    { "latitude": 45.5269, "longitude": -73.5504 },
+    { "latitude": 45.5281, "longitude": -73.5472 }
+  ],
+  "e2": [
+    { "latitude": 45.5315, "longitude": -73.5922 },
+    { "latitude": 45.5303, "longitude": -73.5886 },
+    { "latitude": 45.5292, "longitude": -73.5849 },
+    { "latitude": 45.5283, "longitude": -73.5812 },
+    { "latitude": 45.5276, "longitude": -73.5776 },
+    { "latitude": 45.527, "longitude": -73.5739 },
+    { "latitude": 45.5266, "longitude": -73.5704 },
+    { "latitude": 45.5264, "longitude": -73.5668 }
+  ],
+  "e3": [
+    { "latitude": 45.5453, "longitude": -73.5656 },
+    { "latitude": 45.5428, "longitude": -73.5638 },
+    { "latitude": 45.5402, "longitude": -73.5621 },
+    { "latitude": 45.5377, "longitude": -73.5604 },
+    { "latitude": 45.5354, "longitude": -73.5588 },
+    { "latitude": 45.5331, "longitude": -73.5574 },
+    { "latitude": 45.5308, "longitude": -73.5562 },
+    { "latitude": 45.5286, "longitude": -73.5551 }
+  ],
+  "e4": [
+    { "latitude": 45.5084, "longitude": -73.6134 },
+    { "latitude": 45.5106, "longitude": -73.6099 },
+    { "latitude": 45.5127, "longitude": -73.6063 },
+    { "latitude": 45.5148, "longitude": -73.6027 },
+    { "latitude": 45.5168, "longitude": -73.5991 },
+    { "latitude": 45.5188, "longitude": -73.5956 },
+    { "latitude": 45.5208, "longitude": -73.5921 },
+    { "latitude": 45.5226, "longitude": -73.5888 }
+  ],
+  "e5": [
+    { "latitude": 45.5018, "longitude": -73.5524 },
+    { "latitude": 45.5049, "longitude": -73.5531 },
+    { "latitude": 45.5081, "longitude": -73.5539 },
+    { "latitude": 45.5112, "longitude": -73.5548 },
+    { "latitude": 45.5142, "longitude": -73.5557 },
+    { "latitude": 45.5171, "longitude": -73.5567 },
+    { "latitude": 45.52, "longitude": -73.5577 },
+    { "latitude": 45.5228, "longitude": -73.5587 }
+  ]
+}
