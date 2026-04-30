@@ -9,9 +9,11 @@ import {
   View,
 } from 'react-native';
 import { useCart } from '../../Data/CartContext';
+import { useI18n } from '../../Data/i18n';
 
 export default function PanierScreen() {
   const { cart, totalPanier, addToCart, retirerDuPanier, viderPanier } = useCart();
+  const { t, formatPrice } = useI18n();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
   const nombreItems = useMemo(
@@ -33,20 +35,20 @@ export default function PanierScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Votre panier</Text>
+      <Text style={styles.title}>{t('cart_title')}</Text>
 
       <FlatList
         data={cart}
         keyExtractor={(item) => String(item.id)}
-        ListEmptyComponent={<Text style={styles.empty}>Le panier est vide.</Text>}
+        ListEmptyComponent={<Text style={styles.empty}>{t('cart_empty')}</Text>}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Image source={{ uri: item.image }} style={styles.thumbnail} resizeMode="cover" />
 
             <View style={styles.itemInfo}>
               <Text style={styles.name}>{item.nom}</Text>
-              <Text style={styles.meta}>Prix unitaire: {Number(item.prix).toFixed(2)} $</Text>
-              <Text style={styles.meta}>Total produit: {(Number(item.prix) * item.quantite).toFixed(2)} $</Text>
+              <Text style={styles.meta}>{t('cart_unit_price', { price: formatPrice(item.prix) })}</Text>
+              <Text style={styles.meta}>{t('cart_product_total', { price: formatPrice(Number(item.prix) * item.quantite) })}</Text>
 
               <View style={styles.qtyRow}>
                 <TouchableOpacity
@@ -55,7 +57,7 @@ export default function PanierScreen() {
                 >
                   <Text style={styles.qtyBtnText}>-</Text>
                 </TouchableOpacity>
-                <Text style={styles.qtyText}>Quantite: {item.quantite}</Text>
+                <Text style={styles.qtyText}>{t('cart_quantity', { qty: item.quantite })}</Text>
                 <TouchableOpacity style={styles.qtyBtn} onPress={() => addToCart(item)}>
                   <Text style={styles.qtyBtnText}>+</Text>
                 </TouchableOpacity>
@@ -66,17 +68,17 @@ export default function PanierScreen() {
       />
 
       <View style={styles.footer}>
-        <Text style={styles.meta}>Articles: {nombreItems}</Text>
-        <Text style={styles.total}>Total: {totalPanier.toFixed(2)} $</Text>
+        <Text style={styles.meta}>{t('cart_items', { count: nombreItems })}</Text>
+        <Text style={styles.total}>{t('cart_total', { price: formatPrice(totalPanier) })}</Text>
         <TouchableOpacity style={styles.clearBtn} onPress={viderPanier}>
-          <Text style={styles.clearText}>Vider panier</Text>
+          <Text style={styles.clearText}>{t('cart_clear')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.buyBtn, cart.length === 0 && styles.buyBtnDisabled]}
           onPress={handleAcheter}
           disabled={cart.length === 0}
         >
-          <Text style={styles.buyText}>Acheter</Text>
+          <Text style={styles.buyText}>{t('cart_buy')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -88,12 +90,12 @@ export default function PanierScreen() {
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Achat confirme</Text>
-            <Text style={styles.modalText}>Merci pour votre commande.</Text>
-            <Text style={styles.modalText}>Nombre d'articles: {nombreItems}</Text>
-            <Text style={styles.modalText}>Total paye: {totalPanier.toFixed(2)} $</Text>
+            <Text style={styles.modalTitle}>{t('cart_confirmed')}</Text>
+            <Text style={styles.modalText}>{t('cart_thanks')}</Text>
+            <Text style={styles.modalText}>{t('cart_items_count', { count: nombreItems })}</Text>
+            <Text style={styles.modalText}>{t('cart_total_paid', { price: formatPrice(totalPanier) })}</Text>
             <TouchableOpacity style={styles.modalBtn} onPress={handleClosePurchase}>
-              <Text style={styles.modalBtnText}>Fermer</Text>
+              <Text style={styles.modalBtnText}>{t('common_close')}</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -10,16 +10,18 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useCart } from '../../../Data/CartContext';
+import { useI18n } from '../../../Data/i18n';
 
 export default function ProduitDetailScreen() {
   const { id, nom, description, prix, image } = useLocalSearchParams();
   const { addToCart } = useCart();
+  const { t, formatPrice } = useI18n();
   const [added, setAdded] = useState(false);
 
   const handleAddToCart = () => {
     addToCart({ id: Number(id), nom, description, prix: Number(prix), image });
     setAdded(true);
-    Alert.alert('Panier', `"${nom}" ajouté au panier.`);
+    Alert.alert(t('product_alert_title'), t('product_alert_added', { name: nom }));
   };
 
   return (
@@ -32,8 +34,8 @@ export default function ProduitDetailScreen() {
 
       <View style={styles.info}>
         <Text style={styles.nom}>{nom}</Text>
-        <Text style={styles.prix}>{Number(prix).toFixed(2)} $</Text>
-        <Text style={styles.description}>{description || 'Aucune description disponible.'}</Text>
+        <Text style={styles.prix}>{formatPrice(prix)}</Text>
+        <Text style={styles.description}>{description || t('product_no_description')}</Text>
       </View>
 
       <TouchableOpacity
@@ -41,7 +43,7 @@ export default function ProduitDetailScreen() {
         onPress={handleAddToCart}
       >
         <Text style={styles.buttonText}>
-          {added ? 'Ajouter à nouveau' : 'Ajouter au panier'}
+          {added ? t('product_add_again') : t('product_add')}
         </Text>
       </TouchableOpacity>
     </ScrollView>

@@ -12,9 +12,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
 import { useAuth } from '../../Data/AuthContext';
+import { useI18n } from '../../Data/i18n';
 
 export default function AdminProduitsScreen() {
   const { getProduits, ajouterProduit, supprimerProduit, logout } = useAuth();
+  const { t, formatPrice } = useI18n();
   const [produits, setProduits] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [nom, setNom] = useState('');
@@ -41,13 +43,13 @@ export default function AdminProduitsScreen() {
 
   const handleAjouter = async () => {
     if (!nom.trim() || !prix.trim()) {
-      Alert.alert('Validation', 'Nom et prix sont obligatoires');
+      Alert.alert(t('admin_validation_title'), t('admin_name_price_required'));
       return;
     }
 
     const valeurPrix = Number(prix);
     if (Number.isNaN(valeurPrix) || valeurPrix <= 0) {
-      Alert.alert('Validation', 'Le prix doit etre un nombre positif');
+      Alert.alert(t('admin_validation_title'), t('admin_price_positive'));
       return;
     }
 
@@ -60,10 +62,10 @@ export default function AdminProduitsScreen() {
   };
 
   const handleSupprimer = (id) => {
-    Alert.alert('Suppression', 'Voulez-vous supprimer ce produit ?', [
-      { text: 'Annuler', style: 'cancel' },
+    Alert.alert(t('admin_delete_title'), t('admin_delete_question'), [
+      { text: t('admin_cancel'), style: 'cancel' },
       {
-        text: 'Supprimer',
+        text: t('admin_delete'),
         style: 'destructive',
         onPress: async () => {
           await supprimerProduit(id);
@@ -79,27 +81,27 @@ export default function AdminProduitsScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <Text style={styles.title}>Espace administrateur</Text>
-      <Text style={styles.subtitle}>Gestion des produits: ajout, suppression et liste</Text>
+      <Text style={styles.title}>{t('admin_title')}</Text>
+      <Text style={styles.subtitle}>{t('admin_subtitle')}</Text>
 
       <View style={styles.form}>
         <TextInput
           style={styles.input}
-          placeholder="Nom du produit"
+          placeholder={t('admin_product_name_placeholder')}
           placeholderTextColor="#7DBBFF"
           value={nom}
           onChangeText={setNom}
         />
         <TextInput
           style={styles.input}
-          placeholder="Description du produit"
+          placeholder={t('admin_product_desc_placeholder')}
           placeholderTextColor="#7DBBFF"
           value={description}
           onChangeText={setDescription}
         />
         <TextInput
           style={styles.input}
-          placeholder="Prix (ex: 199.99)"
+          placeholder={t('admin_product_price_placeholder')}
           placeholderTextColor="#7DBBFF"
           value={prix}
           onChangeText={setPrix}
@@ -107,14 +109,14 @@ export default function AdminProduitsScreen() {
         />
         <TextInput
           style={styles.input}
-          placeholder="URL image (optionnel)"
+          placeholder={t('admin_product_image_placeholder')}
           placeholderTextColor="#7DBBFF"
           value={image}
           onChangeText={setImage}
           autoCapitalize="none"
         />
         <TouchableOpacity style={styles.addBtn} onPress={handleAjouter}>
-          <Text style={styles.addText}>Ajouter produit</Text>
+          <Text style={styles.addText}>{t('admin_add_product')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -127,17 +129,17 @@ export default function AdminProduitsScreen() {
           <View style={styles.item}>
             <View style={styles.itemInfo}>
               <Text style={styles.itemNom}>{item.nom}</Text>
-              <Text style={styles.itemMeta}>{Number(item.prix).toFixed(2)} $</Text>
+              <Text style={styles.itemMeta}>{formatPrice(item.prix)}</Text>
             </View>
             <TouchableOpacity style={styles.deleteBtn} onPress={() => handleSupprimer(item.id)}>
-              <Text style={styles.deleteText}>Supprimer</Text>
+              <Text style={styles.deleteText}>{t('admin_delete')}</Text>
             </TouchableOpacity>
           </View>
         )}
       />
 
       <TouchableOpacity style={styles.logoutBtn} onPress={onLogout}>
-        <Text style={styles.logoutText}>Se deconnecter</Text>
+        <Text style={styles.logoutText}>{t('common_logout')}</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

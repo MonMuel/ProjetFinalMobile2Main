@@ -12,10 +12,12 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../Data/AuthContext';
+import { useI18n } from '../Data/i18n';
 
 export default function AccueilScreen() {
 	const router = useRouter();
 	const { isLoading, login } = useAuth();
+	const { t } = useI18n();
 	const [nom, setNom] = useState('');
 	const [mdp, setMdp] = useState('');
 	const [error, setError] = useState('');
@@ -36,7 +38,7 @@ export default function AccueilScreen() {
 				router.replace('/(client)/produits');
 			}
 		} catch (e) {
-			setError('Une erreur est survenue');
+			setError(t('login_error_generic'));
 		} finally {
 			setPending(false);
 		}
@@ -46,7 +48,7 @@ export default function AccueilScreen() {
 		return (
 			<View style={styles.center}>
 				<ActivityIndicator size="large" color="#0080FF" />
-				<Text style={styles.loadingText}>Initialisation...</Text>
+				<Text style={styles.loadingText}>{t('common_loading')}</Text>
 			</View>
 		);
 	}
@@ -62,7 +64,7 @@ export default function AccueilScreen() {
 
 				<TextInput
 					style={styles.input}
-					placeholder="Nom"
+					placeholder={t('login_name_placeholder')}
 					value={nom}
 					placeholderTextColor="#FFFFFF"
 					autoCapitalize="none"
@@ -70,7 +72,7 @@ export default function AccueilScreen() {
 				/>
 				<TextInput
 					style={styles.input}
-					placeholder="Mot de passe"
+					placeholder={t('login_password_placeholder')}
 					value={mdp}
 					placeholderTextColor="#FFFFFF"
 					secureTextEntry
@@ -80,10 +82,10 @@ export default function AccueilScreen() {
 				{error ? <Text style={styles.error}>{error}</Text> : null}
 
 				<TouchableOpacity style={styles.button} onPress={handleConnexion} disabled={pending}>
-					<Text style={styles.buttonText}>{pending ? 'Connexion...' : 'Se connecter'}</Text>
+					<Text style={styles.buttonText}>{pending ? t('login_connecting') : t('login_connect')}</Text>
 				</TouchableOpacity>
 
-				<Text style={styles.hint}>Demo: Admin / 1234 ou Client Test / 1234</Text>
+				<Text style={styles.hint}>{t('login_hint')}</Text>
 			</View>
 
 			<Text style={styles.footer}>Sambe</Text>

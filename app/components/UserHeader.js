@@ -1,40 +1,32 @@
 import React from 'react';
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
 import { useAuth } from '../../Data/AuthContext';
-
-const LABELS_LANGUE = {
-  auto: 'Auto',
-  fr: 'Francais',
-  en: 'English',
-  es: 'Espanol',
-};
+import { useI18n } from '../../Data/i18n';
 
 export default function UserHeader() {
-  const router = useRouter();
   const { user, logout } = useAuth();
+  const { t, languageLabel } = useI18n();
 
   if (!user) {
     return null;
   }
 
-  const langue = LABELS_LANGUE[user.languePreferee] ?? user.languePreferee ?? 'Auto';
+  const langue = languageLabel(user.languePreferee ?? 'auto');
 
   const handleLogout = () => {
     logout();
-    router.replace('/');
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.infoWrap}>
-          <Text style={styles.nameText}>Usager: {user.nom}</Text>
-          <Text style={styles.langText}>Langue: {langue}</Text>
+          <Text style={styles.nameText}>{t('common_user')}: {user.nom}</Text>
+          <Text style={styles.langText}>{t('common_language')}: {langue}</Text>
         </View>
 
         <Pressable onPress={handleLogout} style={styles.logoutBtn}>
-          <Text style={styles.logoutText}>Deconnexion</Text>
+          <Text style={styles.logoutText}>{t('common_logout')}</Text>
         </Pressable>
       </View>
     </SafeAreaView>
