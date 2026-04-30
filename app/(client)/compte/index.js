@@ -2,12 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../../Data/AuthContext';
-
-const LANGUES = [
-  { key: 'fr', label: 'Fr' },
-  { key: 'en', label: 'En' },
-  { key: 'auto', label: 'Auto' },
-];
+import { useI18n } from '../../../Data/i18n';
 
 function RadioOption({ label, active, onPress }) {
   return (
@@ -23,10 +18,17 @@ function RadioOption({ label, active, onPress }) {
 export default function CompteScreen() {
   const router = useRouter();
   const { user, logout, updateProfile } = useAuth();
+  const { t, languageLabel } = useI18n();
   const [mdp, setMdp] = useState('');
   const [adresse, setAdresse] = useState('');
   const [langue, setLangue] = useState('auto');
   const [pending, setPending] = useState(false);
+
+  const LANGUES = [
+    { key: 'fr', label: languageLabel('fr') },
+    { key: 'en', label: languageLabel('en') },
+    { key: 'auto', label: languageLabel('auto') },
+  ];
 
   useEffect(() => {
     setMdp(user?.mdp ?? '');
@@ -38,9 +40,9 @@ export default function CompteScreen() {
     setPending(true);
     try {
       await updateProfile({ mdp, adresse, languePreferee: langue });
-      Alert.alert('Succes', 'Profil mis a jour');
+      Alert.alert(t('account_saved_title'), t('account_saved_message'));
     } catch (error) {
-      Alert.alert('Erreur', error.message || 'Impossible de sauvegarder');
+      Alert.alert(t('account_error_title'), error.message || t('account_error_message'));
     } finally {
       setPending(false);
     }
@@ -48,19 +50,19 @@ export default function CompteScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Compte</Text>
+      <Text style={styles.title}>{t('account_title')}</Text>
 
       <View style={styles.card}>
-        <Text style={styles.label}>Nom</Text>
+        <Text style={styles.label}>{t('account_name')}</Text>
         <TextInput style={[styles.input, styles.inputDisabled]} value={user?.nom ?? ''} editable={false} />
 
-        <Text style={styles.label}>Mot de passe</Text>
+        <Text style={styles.label}>{t('account_password')}</Text>
         <TextInput style={styles.input} value={mdp} onChangeText={setMdp} secureTextEntry />
 
-        <Text style={styles.label}>Adresse</Text>
+        <Text style={styles.label}>{t('account_address')}</Text>
         <TextInput style={styles.input} value={adresse} onChangeText={setAdresse} />
 
-        <Text style={styles.label}>Langue</Text>
+        <Text style={styles.label}>{t('account_language')}</Text>
         <View style={styles.radiosWrap}>
           {LANGUES.map((item) => (
             <RadioOption
@@ -73,11 +75,11 @@ export default function CompteScreen() {
         </View>
 
         <TouchableOpacity style={styles.saveBtn} onPress={onSave} disabled={pending}>
-          <Text style={styles.saveText}>{pending ? 'Enregistrement...' : 'Enregistrer'}</Text>
+          <Text style={styles.saveText}>{pending ? t('account_saving') : t('common_save')}</Text>
         </TouchableOpacity>
 
         <Pressable style={styles.linkWrap} onPress={() => router.push('/(client)/compte/entrepots')}>
-          <Text style={styles.linkText}>Entrepot</Text>
+          <Text style={styles.linkText}>{t('account_warehouse')}</Text>
         </Pressable>
       </View>
 
@@ -87,7 +89,7 @@ export default function CompteScreen() {
           logout();
         }}
       >
-        <Text style={styles.logoutText}>Se deconnecter</Text>
+        <Text style={styles.logoutText}>{t('common_logout')}</Text>
       </TouchableOpacity>
     </View>
   );

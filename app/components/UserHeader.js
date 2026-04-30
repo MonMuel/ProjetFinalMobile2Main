@@ -1,48 +1,45 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../Data/AuthContext';
-
-const LABELS_LANGUE = {
-  auto: 'Auto',
-  fr: 'Francais',
-  en: 'English',
-  es: 'Espanol',
-};
+import { useI18n } from '../../Data/i18n';
 
 export default function UserHeader() {
-  const router = useRouter();
   const { user, logout } = useAuth();
+  const { t, languageLabel } = useI18n();
 
   if (!user) {
     return null;
   }
 
-  const langue = LABELS_LANGUE[user.languePreferee] ?? user.languePreferee ?? 'Auto';
+  const langue = languageLabel(user.languePreferee ?? 'auto');
 
   const handleLogout = () => {
     logout();
-    router.replace('/');
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.infoWrap}>
-        <Text style={styles.nameText}>Usager: {user.nom}</Text>
-        <Text style={styles.langText}>Langue: {langue}</Text>
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.infoWrap}>
+          <Text style={styles.nameText}>{t('common_user')}: {user.nom}</Text>
+          <Text style={styles.langText}>{t('common_language')}: {langue}</Text>
+        </View>
 
-      <Pressable onPress={handleLogout} style={styles.logoutBtn}>
-        <Text style={styles.logoutText}>Deconnexion</Text>
-      </Pressable>
-    </View>
+        <Pressable onPress={handleLogout} style={styles.logoutBtn}>
+          <Text style={styles.logoutText}>{t('common_logout')}</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: '#0B1220',
+  },
   container: {
     paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingVertical: 8,
     backgroundColor: '#0B1220',
     borderBottomWidth: 1,
     borderBottomColor: '#1F2A3D',

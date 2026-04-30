@@ -1,7 +1,10 @@
 import React from 'react';
 import { Stack } from 'expo-router';
+import { useI18n } from '../../../Data/i18n';
 
 export default function ProduitsLayout() {
+  const { t } = useI18n();
+
   return (
     <Stack
       screenOptions={{
@@ -10,8 +13,8 @@ export default function ProduitsLayout() {
         headerTitleStyle: { color: '#FFFFFF', fontWeight: '700' },
       }}
     >
-      <Stack.Screen name="index" options={{ title: 'Produits' }} />
-      <Stack.Screen name="[id]" options={{ title: 'Détails du produit' }} />
+      <Stack.Screen name="index" options={{ title: t('tabs_products') }} />
+      <Stack.Screen name="[id]" options={{ title: t('product_details_title') }} />
     </Stack>
   );
 }

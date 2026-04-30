@@ -2,7 +2,7 @@
   "expo": {
     "name": "ProjetFinalMobile2",
     "slug": "ProjetFinalMobile2",
-    "scheme":"ProjetFinalMobile2",
+    "scheme": "ProjetFinalMobile2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -37,10 +37,13 @@
             "useSQLCipher": false
           },
           "ios": {
-            "customBuildFlags": ["-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"]
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
           }
         }
-      ]
+      ],
+      "expo-localization"
     ]
   }
 }

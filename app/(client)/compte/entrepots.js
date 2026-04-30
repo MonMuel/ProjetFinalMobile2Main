@@ -3,6 +3,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { Circle, Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import cheminsEntrepots from '../../../Data/cheminsEntrepots.json';
+import { useI18n } from '../../../Data/i18n';
 
 const ENTREPOTS = [
   {
@@ -58,6 +59,7 @@ function distanceKm(a, b) {
 }
 
 export default function EntrepotsScreen() {
+  const { t } = useI18n();
   const [homeCoord, setHomeCoord] = useState({ latitude: 45.5269, longitude: -73.5472 });
   const [selectedId, setSelectedId] = useState('e1');
 
@@ -122,7 +124,7 @@ export default function EntrepotsScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.listCol}>
-        <Text style={styles.leftTitle}>Entrepots</Text>
+        <Text style={styles.leftTitle}>{t('warehouses_title')}</Text>
         {ENTREPOTS.map((item) => {
           const active = selectedId === item.id;
           return (
@@ -166,7 +168,7 @@ export default function EntrepotsScreen() {
         </MapView>
 
         <Text style={styles.caption}>
-          Plus proche: {nearestEntrepot.nom} | Chemin trace depuis le JSON ({pathCoords.length} points)
+          {t('warehouses_nearest', { name: nearestEntrepot.nom })} | {t('warehouses_path_points', { count: pathCoords.length })}
         </Text>
       </View>
     </View>

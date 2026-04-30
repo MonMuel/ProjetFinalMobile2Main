@@ -3,10 +3,12 @@ import { Redirect, Tabs } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../Data/AuthContext';
+import { useI18n } from '../../Data/i18n';
 import UserHeader from '../components/UserHeader';
 
 export default function ClientLayout() {
   const { user } = useAuth();
+  const { t } = useI18n();
 
   if (!user) {
     return <Redirect href="/" />;
@@ -34,9 +36,9 @@ export default function ClientLayout() {
             },
           })}
         >
-          <Tabs.Screen name="produits" options={{ title: 'Produits' }} />
-          <Tabs.Screen name="panier" options={{ title: 'Panier' }} />
-          <Tabs.Screen name="compte" options={{ title: 'Compte' }} />
+          <Tabs.Screen name="produits" options={{ title: t('tabs_products') }} />
+          <Tabs.Screen name="panier" options={{ title: t('tabs_cart') }} />
+          <Tabs.Screen name="compte" options={{ title: t('tabs_account') }} />
         </Tabs>
       </View>
     </View>
