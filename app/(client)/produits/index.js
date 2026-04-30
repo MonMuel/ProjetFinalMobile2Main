@@ -75,7 +75,7 @@ export default function ProduitsListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#0D1B2A',
   },
   list: {
     padding: 14,
@@ -84,13 +84,15 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#1A2A3A',
     borderRadius: 12,
     padding: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
+    borderWidth: 1,
+    borderColor: '#0080FF',
+    elevation: 4,
+    shadowColor: '#000080',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
   },
   cardPressed: {
     opacity: 0.75,
@@ -99,13 +101,15 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 8,
-    backgroundColor: '#e2e8f0',
+    backgroundColor: '#0F1823',
+    borderWidth: 1,
+    borderColor: '#0080FF',
   },
   nom: {
     flex: 1,
     marginLeft: 12,
     fontSize: 16,
     fontWeight: '700',
-    color: '#1e293b',
+    color: '#FFFFFF',
   },
 });

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
 import { useAuth } from '../../Data/AuthContext';
 
@@ -77,21 +78,29 @@ export default function AdminProduitsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <Text style={styles.title}>Espace administrateur</Text>
       <Text style={styles.subtitle}>Gestion des produits: ajout, suppression et liste</Text>
 
       <View style={styles.form}>
-        <TextInput style={styles.input} placeholder="Nom du produit" value={nom} onChangeText={setNom} />
         <TextInput
           style={styles.input}
-          placeholder="Description"
+          placeholder="Nom du produit"
+          placeholderTextColor="#7DBBFF"
+          value={nom}
+          onChangeText={setNom}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Description du produit"
+          placeholderTextColor="#7DBBFF"
           value={description}
           onChangeText={setDescription}
         />
         <TextInput
           style={styles.input}
-          placeholder="Prix"
+          placeholder="Prix (ex: 199.99)"
+          placeholderTextColor="#7DBBFF"
           value={prix}
           onChangeText={setPrix}
           keyboardType="numeric"
@@ -99,6 +108,7 @@ export default function AdminProduitsScreen() {
         <TextInput
           style={styles.input}
           placeholder="URL image (optionnel)"
+          placeholderTextColor="#7DBBFF"
           value={image}
           onChangeText={setImage}
           autoCapitalize="none"
@@ -111,6 +121,7 @@ export default function AdminProduitsScreen() {
       <FlatList
         data={produits}
         keyExtractor={(item) => String(item.id)}
+        contentContainerStyle={styles.listContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         renderItem={({ item }) => (
           <View style={styles.item}>
@@ -128,43 +139,50 @@ export default function AdminProduitsScreen() {
       <TouchableOpacity style={styles.logoutBtn} onPress={onLogout}>
         <Text style={styles.logoutText}>Se deconnecter</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#0D1B2A',
     padding: 14,
   },
   title: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 6,
   },
   subtitle: {
     marginTop: 4,
-    color: '#475569',
-    marginBottom: 10,
+    color: '#7DBBFF',
+    marginBottom: 14,
+    textAlign: 'center',
   },
   form: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1A2A3A',
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#0080FF',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#cbd5e1',
+    borderWidth: 2,
+    borderColor: '#0080FF',
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 9,
     marginBottom: 8,
+    backgroundColor: '#0F1823',
+    color: '#FFFFFF',
   },
   addBtn: {
     marginTop: 4,
-    backgroundColor: '#0f766e',
+    backgroundColor: '#0080FF',
     borderRadius: 10,
     alignItems: 'center',
     paddingVertical: 11,
@@ -177,10 +195,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#1A2A3A',
     borderRadius: 12,
     padding: 12,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#0080FF',
+  },
+  listContent: {
+    paddingBottom: 8,
   },
   itemInfo: {
     flex: 1,
@@ -188,25 +211,27 @@ const styles = StyleSheet.create({
   },
   itemNom: {
     fontWeight: '700',
-    color: '#0f172a',
+    color: '#FFFFFF',
   },
   itemMeta: {
-    color: '#475569',
+    color: '#DCEBFF',
     marginTop: 3,
   },
   deleteBtn: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: '#2A1620',
     borderRadius: 8,
     paddingVertical: 6,
     paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: '#EF4444',
   },
   deleteText: {
-    color: '#b91c1c',
+    color: '#F87171',
     fontWeight: '700',
   },
   logoutBtn: {
-    marginTop: 4,
-    backgroundColor: '#1e293b',
+    marginTop: 10,
+    backgroundColor: '#0080FF',
     borderRadius: 10,
     alignItems: 'center',
     paddingVertical: 12,

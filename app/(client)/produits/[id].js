@@ -9,11 +9,11 @@ import {
   View,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useAuth } from '../../../Data/AuthContext';
+import { useCart } from '../../../Data/CartContext';
 
 export default function ProduitDetailScreen() {
   const { id, nom, description, prix, image } = useLocalSearchParams();
-  const { addToCart } = useAuth();
+  const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
   const handleAddToCart = () => {
@@ -51,7 +51,7 @@ export default function ProduitDetailScreen() {
 const styles = StyleSheet.create({
   scroll: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#0D1B2A',
   },
   container: {
     padding: 16,
@@ -61,37 +61,44 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 280,
     borderRadius: 14,
-    backgroundColor: '#e2e8f0',
+    backgroundColor: '#1A2A3A',
+    borderWidth: 1,
+    borderColor: '#0080FF',
   },
   info: {
     marginTop: 18,
+    backgroundColor: '#1A2A3A',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#0080FF',
+    padding: 14,
   },
   nom: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#FFFFFF',
   },
   prix: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#0f766e',
+    color: '#0080FF',
     marginTop: 6,
   },
   description: {
     marginTop: 10,
     fontSize: 15,
-    color: '#475569',
+    color: '#DCEBFF',
     lineHeight: 22,
   },
   button: {
     marginTop: 28,
-    backgroundColor: '#0f766e',
+    backgroundColor: '#0080FF',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
   },
   buttonAdded: {
-    backgroundColor: '#0d9488',
+    backgroundColor: '#1E40AF',
   },
   buttonText: {
     color: '#fff',

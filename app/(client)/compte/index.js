@@ -81,7 +81,12 @@ export default function CompteScreen() {
         </Pressable>
       </View>
 
-      <TouchableOpacity style={styles.logoutBtn} onPress={logout}>
+      <TouchableOpacity
+        style={styles.logoutBtn}
+        onPress={() => {
+          logout();
+        }}
+      >
         <Text style={styles.logoutText}>Se deconnecter</Text>
       </TouchableOpacity>
     </View>

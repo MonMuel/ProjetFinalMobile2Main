@@ -64,6 +64,7 @@ export default function AccueilScreen() {
 					style={styles.input}
 					placeholder="Nom"
 					value={nom}
+					placeholderTextColor="#FFFFFF"
 					autoCapitalize="none"
 					onChangeText={setNom}
 				/>
@@ -71,6 +72,7 @@ export default function AccueilScreen() {
 					style={styles.input}
 					placeholder="Mot de passe"
 					value={mdp}
+					placeholderTextColor="#FFFFFF"
 					secureTextEntry
 					onChangeText={setMdp}
 				/>
