@@ -15,6 +15,7 @@ export default function PanierScreen() {
   const { cart, totalPanier, addToCart, retirerDuPanier, viderPanier } = useCart();
   const { t, formatPrice } = useI18n();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [imageFailures, setImageFailures] = useState({});
 
   const nombreItems = useMemo(
     () => cart.reduce((sum, item) => sum + item.quantite, 0),
@@ -33,6 +34,26 @@ export default function PanierScreen() {
     viderPanier();
   };
 
+  const getCartImageSource = (item) => {
+    const rawUrl = (item.image ?? '').trim();
+
+    if (!rawUrl) {
+      return require('../../assets/logo1.png');
+    }
+
+    const failures = imageFailures[item.id] ?? 0;
+    if (failures >= 2) {
+      return require('../../assets/logo1.png');
+    }
+
+    const separator = rawUrl.includes('?') ? '&' : '?';
+    return failures === 1 ? { uri: `${rawUrl}${separator}retry=1` } : { uri: rawUrl };
+  };
+
+  const handleCartImageError = (itemId) => {
+    setImageFailures((prev) => ({ ...prev, [itemId]: (prev[itemId] ?? 0) + 1 }));
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{t('cart_title')}</Text>
@@ -43,7 +64,12 @@ export default function PanierScreen() {
         ListEmptyComponent={<Text style={styles.empty}>{t('cart_empty')}</Text>}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Image source={{ uri: item.image }} style={styles.thumbnail} resizeMode="cover" />
+            <Image
+              source={getCartImageSource(item)}
+              style={styles.thumbnail}
+              resizeMode="cover"
+              onError={() => handleCartImageError(item.id)}
+            />
 
             <View style={styles.itemInfo}>
               <Text style={styles.name}>{item.nom}</Text>

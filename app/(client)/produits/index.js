@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -8,43 +8,74 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useAuth } from '../../../Data/AuthContext';
 
 export default function ProduitsListScreen() {
   const router = useRouter();
   const { getProduits } = useAuth();
+  const isNavigatingRef = useRef(false);
   const [produits, setProduits] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [imageFailures, setImageFailures] = useState({});
 
-  const loadProduits = useCallback(async () => {
+  const loadProduits = useCallback(async (resetBroken = false) => {
     const data = await getProduits();
+    if (resetBroken) {
+      setImageFailures({});
+    }
     setProduits(data);
   }, [getProduits]);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadProduits();
-    }, [loadProduits])
-  );
+  useEffect(() => {
+    loadProduits();
+  }, [loadProduits]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadProduits();
+    await loadProduits(true);
     setRefreshing(false);
   };
 
   const goToDetail = (item) => {
+    if (isNavigatingRef.current) {
+      return;
+    }
+
+    isNavigatingRef.current = true;
     router.push({
       pathname: '/(client)/produits/[id]',
       params: {
-        id: item.id,
+        id: String(item.id),
         nom: item.nom,
         description: item.description ?? '',
         prix: String(item.prix),
         image: item.image ?? '',
       },
     });
+
+    setTimeout(() => {
+      isNavigatingRef.current = false;
+    }, 400);
+  };
+
+  const getItemImageSource = (item) => {
+    const rawUrl = (item.image ?? '').trim();
+    if (!rawUrl) {
+      return require('../../../assets/logo1.png');
+    }
+
+    const failures = imageFailures[item.id] ?? 0;
+    if (failures >= 2) {
+      return require('../../../assets/logo1.png');
+    }
+
+    const separator = rawUrl.includes('?') ? '&' : '?';
+    return failures === 1 ? { uri: `${rawUrl}${separator}retry=1` } : { uri: rawUrl };
+  };
+
+  const handleItemImageError = (itemId) => {
+    setImageFailures((prev) => ({ ...prev, [itemId]: (prev[itemId] ?? 0) + 1 }));
   };
 
   return (
@@ -60,9 +91,10 @@ export default function ProduitsListScreen() {
             onPress={() => goToDetail(item)}
           >
             <Image
-              source={{ uri: item.image }}
+              source={getItemImageSource(item)}
               style={styles.thumbnail}
               resizeMode="cover"
+              onError={() => handleItemImageError(item.id)}
             />
             <Text style={styles.nom} numberOfLines={1}>{item.nom}</Text>
           </Pressable>
