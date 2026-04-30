@@ -17,9 +17,20 @@ export default function ProduitDetailScreen() {
   const { addToCart } = useCart();
   const { t, formatPrice } = useI18n();
   const [added, setAdded] = useState(false);
+  const [imageFailures, setImageFailures] = useState(0);
+
+  const rawUrl = typeof image === 'string' ? image.trim() : '';
+  const separator = rawUrl.includes('?') ? '&' : '?';
+  const imageSource = !rawUrl
+    ? require('../../../assets/logo1.png')
+    : imageFailures >= 2
+      ? require('../../../assets/logo1.png')
+      : imageFailures === 1
+        ? { uri: `${rawUrl}${separator}retry=1` }
+        : { uri: rawUrl };
 
   const handleAddToCart = () => {
-    addToCart({ id: Number(id), nom, description, prix: Number(prix), image });
+    addToCart({ id: Number(id), nom, description, prix: Number(prix), image: rawUrl });
     setAdded(true);
     Alert.alert(t('product_alert_title'), t('product_alert_added', { name: nom }));
   };
@@ -27,9 +38,10 @@ export default function ProduitDetailScreen() {
   return (
     <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
       <Image
-        source={{ uri: image }}
+        source={imageSource}
         style={styles.image}
         resizeMode="contain"
+        onError={() => setImageFailures((prev) => prev + 1)}
       />
 
       <View style={styles.info}>
