@@ -45,7 +45,7 @@ export default function AccueilScreen() {
 	if (isLoading) {
 		return (
 			<View style={styles.center}>
-				<ActivityIndicator size="large" color="#0f766e" />
+				<ActivityIndicator size="large" color="#0080FF" />
 				<Text style={styles.loadingText}>Initialisation...</Text>
 			</View>
 		);
@@ -57,8 +57,8 @@ export default function AccueilScreen() {
 			behavior={Platform.OS === 'ios' ? 'padding' : undefined}
 		>
 			<View style={styles.card}>
-				<Text style={styles.company}>TechNova Mobile</Text>
-				<Image source={require('../assets/icon.png')} style={styles.image} resizeMode="contain" />
+				<Text style={styles.company}>DuoTech</Text>
+				<Image source={require('../assets/logo1.png')} style={styles.image} resizeMode="contain" />
 
 				<TextInput
 					style={styles.input}
@@ -92,7 +92,7 @@ export default function AccueilScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#f4f8f8',
+		backgroundColor: '#0D1B2A',
 		justifyContent: 'space-between',
 		paddingVertical: 40,
 		paddingHorizontal: 20,
@@ -101,25 +101,27 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		backgroundColor: '#f4f8f8',
+		backgroundColor: '#0D1B2A',
 	},
 	loadingText: {
 		marginTop: 10,
-		color: '#0f172a',
+		color: '#FFFFFF',
 	},
 	card: {
-		backgroundColor: '#ffffff',
+		backgroundColor: '#1A2A3A',
 		borderRadius: 16,
 		padding: 20,
-		shadowColor: '#000',
-		shadowOpacity: 0.1,
-		shadowRadius: 8,
-		elevation: 4,
+		shadowColor: '#000080',
+		shadowOpacity: 0.3,
+		shadowRadius: 12,
+		elevation: 6,
+		borderWidth: 1,
+		borderColor: '#0080FF',
 	},
 	company: {
 		fontSize: 28,
-		fontWeight: '700',
-		color: '#0f172a',
+		fontWeight: '800',
+		color: '#0080FF',
 		textAlign: 'center',
 		marginBottom: 12,
 	},
@@ -127,15 +129,17 @@ const styles = StyleSheet.create({
 		width: '100%',
 		height: 140,
 		marginBottom: 18,
+		borderRadius: 16,
 	},
 	input: {
-		borderWidth: 1,
-		borderColor: '#cbd5e1',
+		borderWidth: 2,
+		borderColor: '#0080FF',
 		borderRadius: 10,
 		paddingHorizontal: 12,
 		paddingVertical: 10,
 		marginBottom: 10,
-		backgroundColor: '#fff',
+		backgroundColor: '#0F1823',
+		color: '#FFFFFF',
 	},
 	error: {
 		color: '#b91c1c',
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	button: {
-		backgroundColor: '#0f766e',
+		backgroundColor: '#0080FF',
 		borderRadius: 10,
 		paddingVertical: 12,
 		alignItems: 'center',
@@ -156,12 +160,12 @@ const styles = StyleSheet.create({
 	hint: {
 		marginTop: 10,
 		textAlign: 'center',
-		color: '#64748b',
+		color: '#7DBBFF',
 		fontSize: 12,
 	},
 	footer: {
 		textAlign: 'center',
-		color: '#334155',
+		color: '#FFFFFF',
 		fontWeight: '600',
 		fontSize: 16,
 	},
