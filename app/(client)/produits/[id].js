@@ -9,11 +9,11 @@ import {
   View,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useAuth } from '../../../Data/AuthContext';
+import { useCart } from '../../../Data/CartContext';
 
 export default function ProduitDetailScreen() {
   const { id, nom, description, prix, image } = useLocalSearchParams();
-  const { addToCart } = useAuth();
+  const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
   const handleAddToCart = () => {

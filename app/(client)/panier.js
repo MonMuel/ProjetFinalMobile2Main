@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useAuth } from '../../Data/AuthContext';
+import { useCart } from '../../Data/CartContext';
 
 export default function PanierScreen() {
-  const { cart, totalPanier, addToCart, retirerDuPanier, viderPanier } = useAuth();
+  const { cart, totalPanier, addToCart, retirerDuPanier, viderPanier } = useCart();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 
   const nombreItems = useMemo(
