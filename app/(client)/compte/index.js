@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../../Data/AuthContext';
-import { useI18n } from '../../../Data/i18n';
+import { useI18n } from '../../../Data/traduction';
+import { useTheme } from '../../../Data/ThemeContext';
 
-function RadioOption({ label, active, onPress }) {
+function RadioOption({ label, active, onPress, styles }) {
   return (
     <Pressable style={styles.radioRow} onPress={onPress}>
       <View style={[styles.radioOuter, active && styles.radioOuterActive]}>
@@ -19,6 +20,8 @@ export default function CompteScreen() {
   const router = useRouter();
   const { user, logout, updateProfile } = useAuth();
   const { t, languageLabel } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [mdp, setMdp] = useState('');
   const [adresse, setAdresse] = useState('');
   const [langue, setLangue] = useState('auto');
@@ -70,6 +73,7 @@ export default function CompteScreen() {
               label={item.label}
               active={langue === item.key}
               onPress={() => setLangue(item.key)}
+              styles={styles}
             />
           ))}
         </View>
@@ -95,111 +99,114 @@ export default function CompteScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0D1B2A',
-    padding: 14,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 12,
-  },
-  card: {
-    backgroundColor: '#1A2A3A',
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#0080FF',
-    elevation: 4,
-    shadowColor: '#000080',
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-  },
-  label: {
-    marginTop: 8,
-    color: '#7DBBFF',
-  },
-  input: {
-    marginTop: 4,
-    borderWidth: 2,
-    borderColor: '#0080FF',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#0F1823',
-    color: '#FFFFFF',
-  },
-  inputDisabled: {
-    backgroundColor: '#0F1823',
-    color: '#7DBBFF',
-    opacity: 0.7,
-  },
-  radiosWrap: {
-    marginTop: 6,
-    flexDirection: 'row',
-    gap: 14,
-  },
-  radioRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  radioOuter: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#7DBBFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radioOuterActive: {
-    borderColor: '#0080FF',
-  },
-  radioInner: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#0080FF',
-  },
-  radioLabel: {
-    marginLeft: 6,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  saveBtn: {
-    marginTop: 14,
-    backgroundColor: '#0080FF',
-    borderRadius: 10,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  saveText: {
-    color: '#fff',
-    fontWeight: '700',
-  },
-  linkWrap: {
-    marginTop: 14,
-    alignSelf: 'flex-start',
-  },
-  linkText: {
-    color: '#7DBBFF',
-    textDecorationLine: 'underline',
-    fontWeight: '700',
-  },
-  logoutBtn: {
-    marginTop: 18,
-    backgroundColor: '#0F1823',
-    borderRadius: 10,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#0080FF',
-  },
-  logoutText: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: 14,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: colors.text,
+      marginBottom: 12,
+    },
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      elevation: 4,
+      shadowColor: '#000080',
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+    },
+    label: {
+      marginTop: 8,
+      color: colors.textSoft,
+    },
+    input: {
+      marginTop: 4,
+      borderWidth: 2,
+      borderColor: colors.border,
+      borderRadius: 10,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+      backgroundColor: colors.surfaceAlt,
+      color: colors.text,
+    },
+    inputDisabled: {
+      backgroundColor: colors.surfaceAlt,
+      color: colors.textSoft,
+      opacity: 0.7,
+    },
+    radiosWrap: {
+      marginTop: 6,
+      flexDirection: 'row',
+      gap: 14,
+    },
+    radioRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    radioOuter: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      borderWidth: 2,
+      borderColor: colors.textSoft,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    radioOuterActive: {
+      borderColor: colors.primary,
+    },
+    radioInner: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      backgroundColor: colors.primary,
+    },
+    radioLabel: {
+      marginLeft: 6,
+      color: colors.text,
+      fontWeight: '600',
+    },
+    saveBtn: {
+      marginTop: 14,
+      backgroundColor: colors.primary,
+      borderRadius: 10,
+      paddingVertical: 12,
+      alignItems: 'center',
+    },
+    saveText: {
+      color: '#fff',
+      fontWeight: '700',
+    },
+    linkWrap: {
+      marginTop: 14,
+      alignSelf: 'flex-start',
+    },
+    linkText: {
+      color: colors.textSoft,
+      textDecorationLine: 'underline',
+      fontWeight: '700',
+    },
+    logoutBtn: {
+      marginTop: 18,
+      backgroundColor: colors.surfaceAlt,
+      borderRadius: 10,
+      paddingVertical: 12,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    logoutText: {
+      color: colors.text,
+      fontWeight: '700',
+    },
+  });
+}
+

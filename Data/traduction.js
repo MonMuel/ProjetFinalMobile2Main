@@ -6,6 +6,10 @@ const TRANSLATIONS = {
   fr: {
     common_user: 'Usager',
     common_language: 'Langue',
+    common_theme: 'Theme',
+    common_dark: 'Sombre',
+    common_light: 'Clair',
+    common_toggle_theme: 'Changer theme',
     common_logout: 'Deconnexion',
     common_auto: 'Auto',
     common_french: 'Francais',
@@ -73,6 +77,10 @@ const TRANSLATIONS = {
   en: {
     common_user: 'User',
     common_language: 'Language',
+    common_theme: 'Theme',
+    common_dark: 'Dark',
+    common_light: 'Light',
+    common_toggle_theme: 'Switch theme',
     common_logout: 'Logout',
     common_auto: 'Auto',
     common_french: 'French',
@@ -221,3 +229,4 @@ export function useI18n() {
     languageLabel,
   };
 }
+

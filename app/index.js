@@ -12,12 +12,15 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../Data/AuthContext';
-import { useI18n } from '../Data/i18n';
+import { useI18n } from '../Data/traduction';
+import { useTheme } from '../Data/ThemeContext';
 
 export default function AccueilScreen() {
 	const router = useRouter();
 	const { isLoading, login } = useAuth();
 	const { t } = useI18n();
+	const { colors } = useTheme();
+	const styles = createStyles(colors);
 	const [nom, setNom] = useState('');
 	const [mdp, setMdp] = useState('');
 	const [error, setError] = useState('');
@@ -66,7 +69,7 @@ export default function AccueilScreen() {
 					style={styles.input}
 					placeholder={t('login_name_placeholder')}
 					value={nom}
-					placeholderTextColor="#7DBBFF"
+					placeholderTextColor={colors.textSoft}
 					autoCapitalize="none"
 					onChangeText={setNom}
 				/>
@@ -74,7 +77,7 @@ export default function AccueilScreen() {
 					style={styles.input}
 					placeholder={t('login_password_placeholder')}
 					value={mdp}
-					placeholderTextColor="#7DBBFF"
+					placeholderTextColor={colors.textSoft}
 					secureTextEntry
 					onChangeText={setMdp}
 				/>
@@ -93,89 +96,92 @@ export default function AccueilScreen() {
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#0D1B2A',
-		justifyContent: 'space-between',
-		paddingVertical: 40,
-		paddingBottom: 20,
-		paddingHorizontal: 20,
-	},
-	center: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#0D1B2A',
-	},
-	loadingText: {
-		marginTop: 10,
-		color: '#FFFFFF',
-	},
-	card: {
-		marginTop: 40,
-		backgroundColor: '#1A2A3A',
-		borderRadius: 16,
-		padding: 20,
-		shadowColor: '#000080',
-		shadowOpacity: 0.3,
-		shadowRadius: 12,
-		elevation: 6,
-		borderWidth: 1,
-		borderColor: '#0080FF',
-	},
-	company: {
-		fontSize: 28,
-		fontWeight: '800',
-		color: '#0080FF',
-		textAlign: 'center',
-		marginBottom: 12,
-	},
-	image: {
-		width: '100%',
-		height: 140,
-		marginBottom: 18,
-		borderRadius: 16,
-		alignSelf: 'center',
-		resizeMode: 'contain',
-	},
-	input: {
-		borderWidth: 2,
-		borderColor: '#0080FF',
-		borderRadius: 10,
-		paddingHorizontal: 12,
-		paddingVertical: 10,
-		marginBottom: 10,
-		backgroundColor: '#0F1823',
-		color: '#FFFFFF',
-	},
-	error: {
-		color: '#b91c1c',
-		marginBottom: 8,
-		textAlign: 'center',
-	},
-	button: {
-		backgroundColor: '#0080FF',
-		borderRadius: 10,
-		paddingVertical: 12,
-		alignItems: 'center',
-		marginTop: 4,
-	},
-	buttonText: {
-		color: '#fff',
-		fontWeight: '700',
-	},
-	hint: {
-		marginTop: 10,
-		textAlign: 'center',
-		color: '#7DBBFF',
-		fontSize: 12,
-	},
-	footer: {
-		textAlign: 'center',
-		color: '#FFFFFF',
-		fontWeight: '600',
-		fontSize: 16,
-		marginBottom: 50,
-	},
-});
+function createStyles(colors) {
+	return StyleSheet.create({
+		container: {
+			flex: 1,
+			backgroundColor: colors.background,
+			justifyContent: 'space-between',
+			paddingVertical: 40,
+			paddingBottom: 20,
+			paddingHorizontal: 20,
+		},
+		center: {
+			flex: 1,
+			alignItems: 'center',
+			justifyContent: 'center',
+			backgroundColor: colors.background,
+		},
+		loadingText: {
+			marginTop: 10,
+			color: colors.text,
+		},
+		card: {
+			marginTop: 40,
+			backgroundColor: colors.surface,
+			borderRadius: 16,
+			padding: 20,
+			shadowColor: '#000080',
+			shadowOpacity: 0.3,
+			shadowRadius: 12,
+			elevation: 6,
+			borderWidth: 1,
+			borderColor: colors.border,
+		},
+		company: {
+			fontSize: 28,
+			fontWeight: '800',
+			color: colors.primary,
+			textAlign: 'center',
+			marginBottom: 12,
+		},
+		image: {
+			width: '100%',
+			height: 140,
+			marginBottom: 18,
+			borderRadius: 16,
+			alignSelf: 'center',
+			resizeMode: 'contain',
+		},
+		input: {
+			borderWidth: 2,
+			borderColor: colors.border,
+			borderRadius: 10,
+			paddingHorizontal: 12,
+			paddingVertical: 10,
+			marginBottom: 10,
+			backgroundColor: colors.surfaceAlt,
+			color: colors.text,
+		},
+		error: {
+			color: colors.danger,
+			marginBottom: 8,
+			textAlign: 'center',
+		},
+		button: {
+			backgroundColor: colors.primary,
+			borderRadius: 10,
+			paddingVertical: 12,
+			alignItems: 'center',
+			marginTop: 4,
+		},
+		buttonText: {
+			color: '#fff',
+			fontWeight: '700',
+		},
+		hint: {
+			marginTop: 10,
+			textAlign: 'center',
+			color: colors.textSoft,
+			fontSize: 12,
+		},
+		footer: {
+			textAlign: 'center',
+			color: colors.text,
+			fontWeight: '600',
+			fontSize: 16,
+			marginBottom: 50,
+		},
+	});
+}
+

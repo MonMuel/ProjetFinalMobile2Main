@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Alert,
   Image,
@@ -10,12 +10,15 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useCart } from '../../../Data/CartContext';
-import { useI18n } from '../../../Data/i18n';
+import { useI18n } from '../../../Data/traduction';
+import { useTheme } from '../../../Data/ThemeContext';
 
 export default function ProduitDetailScreen() {
   const { id, nom, description, prix, image } = useLocalSearchParams();
   const { addToCart } = useCart();
   const { t, formatPrice } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [added, setAdded] = useState(false);
   const [imageFailures, setImageFailures] = useState(0);
 
@@ -62,61 +65,64 @@ export default function ProduitDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: {
-    flex: 1,
-    backgroundColor: '#0D1B2A',
-  },
-  container: {
-    padding: 16,
-    paddingBottom: 40,
-  },
-  image: {
-    width: '100%',
-    height: 280,
-    borderRadius: 14,
-    backgroundColor: '#1A2A3A',
-    borderWidth: 1,
-    borderColor: '#0080FF',
-  },
-  info: {
-    marginTop: 18,
-    backgroundColor: '#1A2A3A',
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: '#0080FF',
-    padding: 14,
-  },
-  nom: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#FFFFFF',
-  },
-  prix: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#0080FF',
-    marginTop: 6,
-  },
-  description: {
-    marginTop: 10,
-    fontSize: 15,
-    color: '#DCEBFF',
-    lineHeight: 22,
-  },
-  button: {
-    marginTop: 28,
-    backgroundColor: '#0080FF',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  buttonAdded: {
-    backgroundColor: '#1E40AF',
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    scroll: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    container: {
+      padding: 16,
+      paddingBottom: 40,
+    },
+    image: {
+      width: '100%',
+      height: 280,
+      borderRadius: 14,
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    info: {
+      marginTop: 18,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 14,
+    },
+    nom: {
+      fontSize: 24,
+      fontWeight: '800',
+      color: colors.text,
+    },
+    prix: {
+      fontSize: 22,
+      fontWeight: '700',
+      color: colors.primary,
+      marginTop: 6,
+    },
+    description: {
+      marginTop: 10,
+      fontSize: 15,
+      color: colors.textMuted,
+      lineHeight: 22,
+    },
+    button: {
+      marginTop: 28,
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      paddingVertical: 14,
+      alignItems: 'center',
+    },
+    buttonAdded: {
+      backgroundColor: colors.primaryStrong,
+    },
+    buttonText: {
+      color: '#fff',
+      fontWeight: '700',
+      fontSize: 16,
+    },
+  });
+}
+

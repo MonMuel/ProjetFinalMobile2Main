@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -10,10 +10,13 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../../Data/AuthContext';
+import { useTheme } from '../../../Data/ThemeContext';
 
 export default function ProduitsListScreen() {
   const router = useRouter();
   const { getProduits } = useAuth();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const isNavigatingRef = useRef(false);
   const [produits, setProduits] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -83,7 +86,14 @@ export default function ProduitsListScreen() {
       <FlatList
         data={produits}
         keyExtractor={(item) => String(item.id)}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
+        }
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
           <Pressable
@@ -104,44 +114,47 @@ export default function ProduitsListScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0D1B2A',
-  },
-  list: {
-    padding: 14,
-    gap: 10,
-  },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1A2A3A',
-    borderRadius: 12,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#0080FF',
-    elevation: 4,
-    shadowColor: '#000080',
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-  },
-  cardPressed: {
-    opacity: 0.75,
-  },
-  thumbnail: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    backgroundColor: '#0F1823',
-    borderWidth: 1,
-    borderColor: '#0080FF',
-  },
-  nom: {
-    flex: 1,
-    marginLeft: 12,
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    list: {
+      padding: 14,
+      gap: 10,
+    },
+    card: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 10,
+      borderWidth: 1,
+      borderColor: colors.border,
+      elevation: 4,
+      shadowColor: '#000080',
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+    },
+    cardPressed: {
+      opacity: 0.75,
+    },
+    thumbnail: {
+      width: 60,
+      height: 60,
+      borderRadius: 8,
+      backgroundColor: colors.surfaceAlt,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    nom: {
+      flex: 1,
+      marginLeft: 12,
+      fontSize: 16,
+      fontWeight: '700',
+      color: colors.text,
+    },
+  });
+}
+

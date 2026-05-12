@@ -1,16 +1,18 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { useI18n } from '../../../Data/i18n';
+import { useI18n } from '../../../Data/traduction';
+import { useTheme } from '../../../Data/ThemeContext';
 
 export default function ProduitsLayout() {
   const { t } = useI18n();
+  const { colors } = useTheme();
 
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: '#1A2A3A' },
-        headerTintColor: '#0080FF',
-        headerTitleStyle: { color: '#FFFFFF', fontWeight: '700' },
+        headerStyle: { backgroundColor: colors.surface },
+        headerTintColor: colors.primary,
+        headerTitleStyle: { color: colors.headerTitle, fontWeight: '700' },
       }}
     >
       <Stack.Screen name="index" options={{ title: t('tabs_products') }} />
@@ -18,3 +20,4 @@ export default function ProduitsLayout() {
     </Stack>
   );
 }
+

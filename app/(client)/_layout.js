@@ -3,12 +3,15 @@ import { Redirect, Tabs } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../Data/AuthContext';
-import { useI18n } from '../../Data/i18n';
+import { useI18n } from '../../Data/traduction';
+import { useTheme } from '../../Data/ThemeContext';
 import UserHeader from '../components/UserHeader';
 
 export default function ClientLayout() {
   const { user } = useAuth();
   const { t } = useI18n();
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
 
   if (!user) {
     return <Redirect href="/" />;
@@ -25,8 +28,12 @@ export default function ClientLayout() {
         <Tabs
           screenOptions={({ route }) => ({
             headerShown: false,
-            tabBarActiveTintColor: '#0f766e',
-            tabBarInactiveTintColor: '#64748b',
+            tabBarStyle: {
+              backgroundColor: colors.surface,
+              borderTopColor: colors.borderSoft,
+            },
+            tabBarActiveTintColor: colors.tabActive,
+            tabBarInactiveTintColor: colors.tabInactive,
             tabBarIcon: ({ color, size }) => {
               let iconName = 'ellipse';
               if (route.name === 'produits') iconName = 'cube-outline';
@@ -45,12 +52,15 @@ export default function ClientLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0D1B2A',
-  },
-  content: {
-    flex: 1,
-  },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    content: {
+      flex: 1,
+    },
+  });
+}
+
