@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import * as SQLite from 'expo-sqlite';
 import { migrateDB } from './BD';
 
@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const login = async (nom, mdp) => {
+  const login = useCallback(async (nom, mdp) => {
     if (!db) {
       return { success: false, message: 'Base de donnees non prete' };
     }
@@ -63,13 +63,13 @@ export function AuthProvider({ children }) {
     setUser(normalized);
 
     return { success: true, user: normalized };
-  };
+  }, [db]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
-  };
+  }, []);
 
-  const updateProfile = async ({ mdp, adresse, languePreferee }) => {
+  const updateProfile = useCallback(async ({ mdp, adresse, languePreferee }) => {
     if (!db || !user) {
       throw new Error('Utilisateur non connecte');
     }
@@ -93,17 +93,17 @@ export function AuthProvider({ children }) {
       adresse: nextAdresse,
       languePreferee: nextLangue,
     }));
-  };
+  }, [db, user]);
 
-  const getProduits = async () => {
+  const getProduits = useCallback(async () => {
     if (!db) {
       return [];
     }
     const rows = await db.getAllAsync('SELECT id, nom, description, prix, image FROM Produit ORDER BY id DESC;');
     return rows ?? [];
-  };
+  }, [db]);
 
-  const ajouterProduit = async ({ nom, description, prix, image }) => {
+  const ajouterProduit = useCallback(async ({ nom, description, prix, image }) => {
     if (!db) {
       throw new Error('Base de donnees non prete');
     }
@@ -111,16 +111,16 @@ export function AuthProvider({ children }) {
       'INSERT INTO Produit (nom, description, prix, image) VALUES (?, ?, ?, ?);',
       [nom.trim(), description?.trim() ?? '', Number(prix), image?.trim() ?? 'https://via.placeholder.com/150']
     );
-  };
+  }, [db]);
 
-  const supprimerProduit = async (id) => {
+  const supprimerProduit = useCallback(async (id) => {
     if (!db) {
       throw new Error('Base de donnees non prete');
     }
     await db.runAsync('DELETE FROM Produit WHERE id = ?;', [id]);
-  };
+  }, [db]);
 
-  const value = {
+  const value = useMemo(() => ({
     isLoading,
     user,
     login,
@@ -129,7 +129,7 @@ export function AuthProvider({ children }) {
     getProduits,
     ajouterProduit,
     supprimerProduit,
-  };
+  }), [isLoading, user, login, logout, updateProfile, getProduits, ajouterProduit, supprimerProduit]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
@@ -141,3 +141,4 @@ export function useAuth() {
   }
   return context;
 }
+

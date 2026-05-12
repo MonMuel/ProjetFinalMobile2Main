@@ -1,13 +1,15 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { useI18n } from '../../../Data/i18n';
+import { useI18n } from '../../../Data/traduction';
+import { useTheme } from '../../../Data/ThemeContext';
 
 export default function CompteLayout() {
   const { t } = useI18n();
+  const { colors } = useTheme();
 
   const headerStyle = {
-    headerStyle: { backgroundColor: '#1A2A3A' },
-    headerTintColor: '#FFFFFF',
+    headerStyle: { backgroundColor: colors.surface },
+    headerTintColor: colors.text,
     headerTitleStyle: { fontWeight: '700' },
   };
 
@@ -18,3 +20,4 @@ export default function CompteLayout() {
     </Stack>
   );
 }
+

@@ -2,8 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import MapView, { Circle, Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import cheminsEntrepots from '../../../Data/cheminsEntrepots.json';
-import { useI18n } from '../../../Data/i18n';
+import { useI18n } from '../../../Data/traduction';
+import { useTheme } from '../../../Data/ThemeContext';
 
 const ENTREPOTS = [
   {
@@ -39,6 +41,7 @@ const ENTREPOTS = [
 ];
 
 const HOME_ICON = 'https://via.placeholder.com/42/111827/ffffff?text=HOME';
+const ENTREPOT_OUEST_ID = 'e2';
 
 function toRad(value) {
   return (value * Math.PI) / 180;
@@ -60,8 +63,11 @@ function distanceKm(a, b) {
 
 export default function EntrepotsScreen() {
   const { t } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [homeCoord, setHomeCoord] = useState({ latitude: 45.5269, longitude: -73.5472 });
   const [selectedId, setSelectedId] = useState('e1');
+  const [pathCoords, setPathCoords] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -106,9 +112,60 @@ export default function EntrepotsScreen() {
     return nearest;
   }, [homeCoord]);
 
-  const pathCoords = useMemo(() => {
-    const route = cheminsEntrepots[nearestEntrepot.id] || [];
-    return [...route, homeCoord];
+  useEffect(() => {
+    let active = true;
+
+    function applyFallbackPath() {
+      const route = cheminsEntrepots[nearestEntrepot.id] || [];
+      if (route.length === 0) {
+        setPathCoords([nearestEntrepot.coordinate, homeCoord]);
+        return;
+      }
+
+      const lastPoint = route[route.length - 1];
+      const canJoinHome = distanceKm(lastPoint, homeCoord) <= 2;
+      setPathCoords(canJoinHome ? [...route, homeCoord] : route);
+    }
+
+    async function loadDrivingRoute() {
+      const from = nearestEntrepot.coordinate;
+      const to = homeCoord;
+      const url = `https://router.project-osrm.org/route/v1/driving/${from.longitude},${from.latitude};${to.longitude},${to.latitude}?overview=full&geometries=geojson&steps=false`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('OSRM request failed');
+        }
+
+        const data = await response.json();
+        const geometry = data?.routes?.[0]?.geometry?.coordinates;
+        const roadCoords = Array.isArray(geometry)
+          ? geometry.map(([longitude, latitude]) => ({ latitude, longitude }))
+          : [];
+
+        if (!active) {
+          return;
+        }
+
+        if (roadCoords.length > 1) {
+          setPathCoords(roadCoords);
+          return;
+        }
+
+        applyFallbackPath();
+      } catch (_error) {
+        if (!active) {
+          return;
+        }
+        applyFallbackPath();
+      }
+    }
+
+    loadDrivingRoute();
+    return () => {
+      active = false;
+    };
   }, [nearestEntrepot, homeCoord]);
 
   const initialRegion = useMemo(
@@ -146,13 +203,23 @@ export default function EntrepotsScreen() {
               <Circle
                 center={item.coordinate}
                 radius={5000}
-                strokeColor={selectedId === item.id ? 'rgba(15,118,110,0.9)' : 'rgba(15,23,42,0.35)'}
+                strokeColor={selectedId === item.id ? 'rgba(15,118,110,0.9)' : 'rgba(51,65,85,0.35)'}
                 fillColor={selectedId === item.id ? 'rgba(15,118,110,0.14)' : 'rgba(148,163,184,0.12)'}
               />
 
               <Marker coordinate={item.coordinate} onPress={() => setSelectedId(item.id)}>
-                <View style={[styles.markerWrap, selectedId === item.id && styles.markerWrapActive]}>
-                  <Image source={{ uri: item.icon }} style={styles.markerImage} />
+                <View
+                  style={[
+                    styles.markerWrap,
+                    item.id === ENTREPOT_OUEST_ID && styles.markerWrapWest,
+                    selectedId === item.id && styles.markerWrapActive,
+                  ]}
+                >
+                  {item.id === ENTREPOT_OUEST_ID ? (
+                    <MaterialCommunityIcons name="warehouse" size={24} color={colors.primaryStrong} />
+                  ) : (
+                    <View style={styles.markerDot} />
+                  )}
                 </View>
               </Marker>
             </React.Fragment>
@@ -164,7 +231,7 @@ export default function EntrepotsScreen() {
             </View>
           </Marker>
 
-          <Polyline coordinates={pathCoords} strokeColor="#ef4444" strokeWidth={4} />
+          <Polyline coordinates={pathCoords} strokeColor={colors.danger} strokeWidth={4} />
         </MapView>
 
         <Text style={styles.caption}>
@@ -175,86 +242,99 @@ export default function EntrepotsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f1f5f9',
-    flexDirection: 'row',
-  },
-  listCol: {
-    width: '25%',
-    backgroundColor: '#0f172a',
-    paddingVertical: 12,
-    paddingHorizontal: 6,
-  },
-  leftTitle: {
-    color: '#f8fafc',
-    fontWeight: '700',
-    marginBottom: 8,
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  warehouseBtn: {
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 6,
-    backgroundColor: '#1e293b',
-    marginBottom: 8,
-  },
-  warehouseBtnActive: {
-    backgroundColor: '#0f766e',
-  },
-  warehouseText: {
-    color: '#cbd5e1',
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: 12,
-  },
-  warehouseTextActive: {
-    color: '#ffffff',
-  },
-  mapCol: {
-    width: '75%',
-    paddingVertical: 8,
-    paddingRight: 8,
-  },
-  map: {
-    flex: 1,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  markerWrap: {
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: '#0f172a',
-    backgroundColor: '#fff',
-    padding: 2,
-  },
-  markerWrapActive: {
-    borderColor: '#0f766e',
-    transform: [{ scale: 1.08 }],
-  },
-  markerImage: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-  },
-  homeMarkerWrap: {
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: '#ef4444',
-    backgroundColor: '#fff',
-    padding: 3,
-  },
-  homeMarkerImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-  },
-  caption: {
-    marginTop: 6,
-    color: '#0f172a',
-    fontWeight: '600',
-    fontSize: 12,
-  },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      flexDirection: 'row',
+    },
+    listCol: {
+      width: '25%',
+      backgroundColor: colors.mapContainer,
+      paddingVertical: 12,
+      paddingHorizontal: 6,
+    },
+    leftTitle: {
+      color: colors.headerTitle,
+      fontWeight: '700',
+      marginBottom: 8,
+      fontSize: 14,
+      textAlign: 'center',
+    },
+    warehouseBtn: {
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 6,
+      backgroundColor: colors.mapCard,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: colors.borderSoft,
+    },
+    warehouseBtnActive: {
+      backgroundColor: '#0f766e',
+      borderColor: '#0f766e',
+    },
+    warehouseText: {
+      color: colors.mapText,
+      textAlign: 'center',
+      fontWeight: '600',
+      fontSize: 12,
+    },
+    warehouseTextActive: {
+      color: '#ffffff',
+    },
+    mapCol: {
+      width: '75%',
+      paddingVertical: 8,
+      paddingRight: 8,
+    },
+    map: {
+      flex: 1,
+      borderRadius: 12,
+      overflow: 'hidden',
+    },
+    markerWrap: {
+      borderRadius: 22,
+      borderWidth: 2,
+      borderColor: colors.mapContainer,
+      backgroundColor: '#fff',
+      padding: 5,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    markerWrapWest: {
+      borderColor: colors.primaryStrong,
+      backgroundColor: '#fef3c7',
+    },
+    markerDot: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      backgroundColor: '#334155',
+    },
+    markerWrapActive: {
+      borderColor: '#0f766e',
+      transform: [{ scale: 1.08 }],
+    },
+    homeMarkerWrap: {
+      borderRadius: 24,
+      borderWidth: 2,
+      borderColor: colors.danger,
+      backgroundColor: '#fff',
+      padding: 3,
+    },
+    homeMarkerImage: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+    },
+    caption: {
+      marginTop: 6,
+      color: colors.mapCaption,
+      fontWeight: '600',
+      fontSize: 12,
+    },
+  });
+}
+

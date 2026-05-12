@@ -9,11 +9,14 @@ import {
   View,
 } from 'react-native';
 import { useCart } from '../../Data/CartContext';
-import { useI18n } from '../../Data/i18n';
+import { useI18n } from '../../Data/traduction';
+import { useTheme } from '../../Data/ThemeContext';
 
 export default function PanierScreen() {
   const { cart, totalPanier, addToCart, retirerDuPanier, viderPanier } = useCart();
   const { t, formatPrice } = useI18n();
+  const { colors } = useTheme();
+  const styles = useMemo(() => createStyles(colors), [colors]);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [imageFailures, setImageFailures] = useState({});
 
@@ -130,146 +133,148 @@ export default function PanierScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0D1B2A',
-    padding: 14,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    marginBottom: 10,
-  },
-  empty: {
-    textAlign: 'center',
-    marginTop: 40,
-    color: '#7DBBFF',
-  },
-  item: {
-    backgroundColor: '#1A2A3A',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-    borderWidth: 1,
-    borderColor: '#0080FF',
-  },
-  thumbnail: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    backgroundColor: '#0F1823',
-    borderWidth: 1,
-    borderColor: '#0080FF',
-  },
-  itemInfo: {
-    flex: 1,
-  },
-  name: {
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  meta: {
-    color: '#DCEBFF',
-    marginTop: 2,
-  },
-  qtyRow: {
-    marginTop: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  qtyBtn: {
-    backgroundColor: '#0080FF',
-    borderRadius: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-  },
-  qtyBtnText: {
-    color: '#fff',
-    fontWeight: '600',
-    fontSize: 16,
-  },
-  qtyText: {
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  footer: {
-    borderTopWidth: 1,
-    borderTopColor: '#0080FF',
-    paddingTop: 12,
-    marginTop: 6,
-  },
-  total: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#0080FF',
-  },
-  clearBtn: {
-    marginTop: 10,
-    backgroundColor: '#b91c1c',
-    borderRadius: 10,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  clearText: {
-    color: '#fff',
-    fontWeight: '700',
-  },
-  buyBtn: {
-    marginTop: 10,
-    backgroundColor: '#0080FF',
-    borderRadius: 10,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  buyBtnDisabled: {
-    opacity: 0.5,
-  },
-  buyText: {
-    color: '#fff',
-    fontWeight: '700',
-  },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(15, 23, 42, 0.55)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  modalCard: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: '#1A2A3A',
-    borderRadius: 14,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: '#0080FF',
-  },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  modalText: {
-    fontSize: 15,
-    color: '#DCEBFF',
-    marginTop: 4,
-  },
-  modalBtn: {
-    marginTop: 16,
-    backgroundColor: '#0080FF',
-    borderRadius: 10,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  modalBtnText: {
-    color: '#fff',
-    fontWeight: '700',
-  },
-});
+function createStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: 14,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: '800',
+      color: colors.text,
+      marginBottom: 10,
+    },
+    empty: {
+      textAlign: 'center',
+      marginTop: 40,
+      color: colors.textSoft,
+    },
+    item: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 12,
+      marginBottom: 10,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 10,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    thumbnail: {
+      width: 60,
+      height: 60,
+      borderRadius: 8,
+      backgroundColor: colors.surfaceAlt,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    itemInfo: {
+      flex: 1,
+    },
+    name: {
+      fontWeight: '700',
+      color: colors.text,
+    },
+    meta: {
+      color: colors.textMuted,
+      marginTop: 2,
+    },
+    qtyRow: {
+      marginTop: 8,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    qtyBtn: {
+      backgroundColor: colors.primary,
+      borderRadius: 8,
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+    },
+    qtyBtnText: {
+      color: '#fff',
+      fontWeight: '600',
+      fontSize: 16,
+    },
+    qtyText: {
+      fontWeight: '600',
+      color: colors.text,
+    },
+    footer: {
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      paddingTop: 12,
+      marginTop: 6,
+    },
+    total: {
+      fontSize: 18,
+      fontWeight: '700',
+      color: colors.primary,
+    },
+    clearBtn: {
+      marginTop: 10,
+      backgroundColor: colors.danger,
+      borderRadius: 10,
+      paddingVertical: 10,
+      alignItems: 'center',
+    },
+    clearText: {
+      color: '#fff',
+      fontWeight: '700',
+    },
+    buyBtn: {
+      marginTop: 10,
+      backgroundColor: colors.primary,
+      borderRadius: 10,
+      paddingVertical: 10,
+      alignItems: 'center',
+    },
+    buyBtnDisabled: {
+      opacity: 0.5,
+    },
+    buyText: {
+      color: '#fff',
+      fontWeight: '700',
+    },
+    modalBackdrop: {
+      flex: 1,
+      backgroundColor: 'rgba(15, 23, 42, 0.55)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    modalCard: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      padding: 18,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    modalTitle: {
+      fontSize: 22,
+      fontWeight: '800',
+      color: colors.text,
+      marginBottom: 8,
+    },
+    modalText: {
+      fontSize: 15,
+      color: colors.textMuted,
+      marginTop: 4,
+    },
+    modalBtn: {
+      marginTop: 16,
+      backgroundColor: colors.primary,
+      borderRadius: 10,
+      paddingVertical: 10,
+      alignItems: 'center',
+    },
+    modalBtnText: {
+      color: '#fff',
+      fontWeight: '700',
+    },
+  });
+}
